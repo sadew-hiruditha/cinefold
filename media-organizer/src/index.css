@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+    font-family: var(--font-sans);
+    /* A desktop shell should not rubber-band or select like a web page. */
+    overscroll-behavior: none;
+    user-select: none;
+  }
+
+  input,
+  textarea {
+    user-select: text;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-white/10;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-indigo-400;
+  }
+}
+
+@layer utilities {
+  /* Paths and filenames read better when the end stays visible. */
+  .truncate-start {
+    direction: rtl;
+    text-align: left;
+    unicode-bidi: plaintext;
+  }
+}
