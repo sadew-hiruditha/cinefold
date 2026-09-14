@@ -102,3 +102,7 @@ src-tauri/src/
 - Explorer caches icons aggressively. If a folder still shows the stock icon,
   use **Settings → Refresh icon cache** or sign out and back in.
 - The binary is unsigned, so SmartScreen will warn on first launch.
+
+## Author
+
+Built by [Sadew Hiruditha](https://github.com/sadew-hiruditha).
