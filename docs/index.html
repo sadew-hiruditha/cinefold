@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cinefold — organise your films and series</title>
+<meta name="description" content="Cinefold scans a messy downloads folder, identifies films and series against TMDB, organises them into a clean library with matched subtitles, and sets the poster as the folder icon. Free, open source, Windows." />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+
+<meta property="og:title" content="Cinefold — organise your films and series" />
+<meta property="og:description" content="Scan a messy downloads folder. Get a clean library with posters, subtitles, and folder icons — previewed before anything moves." />
+<meta property="og:image" content="assets/logo.png" />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Manrope', 'system-ui', 'sans-serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            50: '#f4f4ff', 100: '#ebebfe', 200: '#d7d6fd', 300: '#b6b3fb',
+            400: '#8f89f6', 500: '#6d63ef', 600: '#5b45e0', 700: '#4c36c4',
+            800: '#3f2f9e', 900: '#362b7d',
+          },
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: #fbfbfe; }
+  .grad-text {
+    background: linear-gradient(100deg, #6d63ef 0%, #7c3aed 45%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .grad-bg {
+    background: linear-gradient(135deg, #6d63ef 0%, #7c3aed 55%, #3b82f6 100%);
+  }
+  .hero-glow {
+    background:
+      radial-gradient(50% 50% at 15% 10%, rgba(124,58,237,.12) 0%, transparent 100%),
+      radial-gradient(50% 50% at 85% 0%, rgba(59,130,246,.12) 0%, transparent 100%);
+  }
+  .card-hover { transition: transform .18s ease, box-shadow .18s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -12px rgba(76,54,196,.25); }
+  ::selection { background: #d7d6fd; }
+</style>
+</head>
+<body class="font-sans text-zinc-800 antialiased">
+
+  <!-- ============ NAV ============ -->
+  <header class="sticky top-0 z-40 border-b border-zinc-100 bg-white/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8">
+      <a href="#top" class="flex items-center gap-2.5">
+        <img src="assets/logo.png" alt="" class="h-8 w-8" />
+        <span class="font-display text-lg font-extrabold tracking-tight text-zinc-900">Cinefold</span>
+      </a>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-zinc-600 md:flex">
+        <a href="#features" class="hover:text-zinc-900">Features</a>
+        <a href="#how" class="hover:text-zinc-900">How it works</a>
+        <a href="#get-started" class="hover:text-zinc-900">Get started</a>
+        <a href="https://github.com/sadew-hiruditha/cinefold" class="hover:text-zinc-900">GitHub</a>
+      </nav>
+      <a href="https://github.com/sadew-hiruditha/cinefold/releases" class="rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-700">
+        Download
+      </a>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" class="hero-glow relative overflow-hidden">
+    <div class="mx-auto max-w-6xl px-5 pb-20 pt-16 sm:px-8 sm:pt-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="mb-6 flex justify-center">
+          <img src="assets/logo.png" alt="Cinefold" class="h-20 w-20 drop-shadow-sm sm:h-24 sm:w-24" />
+        </div>
+        <p class="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 ring-1 ring-inset ring-brand-100">
+          Free &middot; Open source &middot; Windows
+        </p>
+        <h1 class="font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl">
+          Your downloads folder,<br class="hidden sm:block" />
+          turned into a <span class="grad-text">real library</span>.
+        </h1>
+        <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500">
+          Cinefold scans a messy folder, works out what every film and episode
+          actually is, and organises everything into clean, named folders with
+          matched subtitles and poster artwork — and shows you exactly what
+          will happen before a single file moves.
+        </p>
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="https://github.com/sadew-hiruditha/cinefold/releases"
+             class="grad-bg inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-600/20 transition-transform hover:scale-[1.03]">
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16.5h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download for Windows
+          </a>
+          <a href="https://github.com/sadew-hiruditha/cinefold"
+             class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-7 py-3.5 text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.7 5.6.7 12c0 5.1 3.3 9.4 7.9 11 .6.1.8-.3.8-.6v-2.1c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11 11 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.3.8 1 .8 2.1v3.1c0 .3.2.7.8.6 4.6-1.6 7.9-5.9 7.9-11C23.3 5.6 18.3.5 12 .5z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+        <p class="mt-4 text-xs text-zinc-400">
+          Windows 10/11 &middot; ~10 MB installer &middot; No account, no telemetry, no subscription
+        </p>
+      </div>
+
+      <!-- illustrative "how it looks" panel -->
+      <div class="mx-auto mt-16 max-w-4xl">
+        <div class="overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl shadow-zinc-900/20 ring-1 ring-zinc-900/5">
+          <div class="flex items-center gap-1.5 border-b border-white/5 px-4 py-3">
+            <span class="h-2.5 w-2.5 rounded-full bg-red-400/70"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-amber-400/70"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/70"></span>
+            <span class="ml-3 text-xs text-zinc-500">Cinefold — Organise</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3 p-5 sm:grid-cols-4 sm:gap-4 sm:p-7">
+            <div class="col-span-2 flex items-center gap-3 rounded-xl bg-white/[0.04] p-4 sm:col-span-4">
+              <div class="h-9 w-9 shrink-0 rounded-lg bg-white/10"></div>
+              <div class="h-2.5 w-40 rounded-full bg-white/10"></div>
+              <div class="ml-auto h-8 w-24 shrink-0 rounded-lg grad-bg opacity-90"></div>
+            </div>
+            <div class="space-y-2 rounded-xl bg-white/[0.04] p-3">
+              <div class="aspect-[2/3] w-full rounded-lg bg-gradient-to-br from-brand-500/40 to-blue-500/30"></div>
+              <div class="h-2 w-4/5 rounded-full bg-white/10"></div>
+              <div class="h-2 w-2/5 rounded-full bg-white/10"></div>
+            </div>
+            <div class="space-y-2 rounded-xl bg-white/[0.04] p-3">
+              <div class="aspect-[2/3] w-full rounded-lg bg-gradient-to-br from-violet-500/40 to-brand-500/30"></div>
+              <div class="h-2 w-4/5 rounded-full bg-white/10"></div>
+              <div class="h-2 w-2/5 rounded-full bg-white/10"></div>
+            </div>
+            <div class="space-y-2 rounded-xl bg-white/[0.04] p-3">
+              <div class="aspect-[2/3] w-full rounded-lg bg-gradient-to-br from-blue-500/40 to-violet-500/30"></div>
+              <div class="h-2 w-4/5 rounded-full bg-white/10"></div>
+              <div class="h-2 w-2/5 rounded-full bg-white/10"></div>
+            </div>
+            <div class="hidden space-y-2 rounded-xl bg-white/[0.04] p-3 sm:block">
+              <div class="aspect-[2/3] w-full rounded-lg bg-gradient-to-br from-brand-500/40 to-violet-500/30"></div>
+              <div class="h-2 w-4/5 rounded-full bg-white/10"></div>
+              <div class="h-2 w-2/5 rounded-full bg-white/10"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST STRIP ============ -->
+  <section class="border-y border-zinc-100 bg-white py-8">
+    <div class="mx-auto grid max-w-5xl grid-cols-2 gap-6 px-5 text-center sm:grid-cols-4 sm:px-8">
+      <div>
+        <p class="font-display text-2xl font-extrabold text-zinc-900">100%</p>
+        <p class="text-sm text-zinc-500">previewed before moving</p>
+      </div>
+      <div>
+        <p class="font-display text-2xl font-extrabold text-zinc-900">Local</p>
+        <p class="text-sm text-zinc-500">nothing leaves your PC</p>
+      </div>
+      <div>
+        <p class="font-display text-2xl font-extrabold text-zinc-900">Undo</p>
+        <p class="text-sm text-zinc-500">every run, any time</p>
+      </div>
+      <div>
+        <p class="font-display text-2xl font-extrabold text-zinc-900">Free</p>
+        <p class="text-sm text-zinc-500">and open source</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features" class="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="font-display text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl">
+        Everything a tidy library needs
+      </h2>
+      <p class="mt-4 text-lg text-zinc-500">
+        One pass, and your films and series look like they belong on a shelf.
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><path d="M4 6a2 2 0 012-2h3l1.5 1.5H14a2 2 0 012 2V14a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">Recognises what you have</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">Strips release junk from cryptic filenames, then confirms the title, year, season and episode against TMDB — with a review queue for anything uncertain, never a silent guess.</p>
+      </div>
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><path d="M3 10l6-6 8 8-6 6-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7.5" cy="7.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">Posters as folder icons</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">Every folder gets the real poster as its Windows icon — three styles, your own colour per film or series, borders and corners to taste.</p>
+      </div>
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="5" width="15" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 9c-1 0-1.8.7-1.8 1.6S5 12.2 6 12.2c.5 0 1-.2 1.3-.5M13 9c-1 0-1.8.7-1.8 1.6s.8 1.6 1.8 1.6c.5 0 1-.2 1.3-.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">Subtitles, matched or fetched</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">Local subtitles are paired and renamed automatically. Missing one? Fetch it from SubDL for exactly the title you need — no blanket downloading you didn't ask for.</p>
+      </div>
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="2.5" width="15" height="15" rx="4" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">Dry-run preview, always</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">See the exact source-to-destination mapping for every file before anything happens. Untick anything you don't want moved. Nothing is a surprise.</p>
+      </div>
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 1 0 2-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 4v3.5H7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">One-click undo</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">Every run is journalled. Changed your mind an hour, a day, a week later? Roll the whole thing back from History, safely and completely.</p>
+      </div>
+      <!-- card -->
+      <div class="card-hover rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg mb-4 grid h-11 w-11 place-items-center rounded-xl text-white">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-zinc-900">Your collection, tracked</h3>
+        <p class="mt-2 text-sm leading-relaxed text-zinc-500">A poster wall of everything you own, with watched status, your own ratings and notes, and which episodes of a series you still don't have.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section id="how" class="border-y border-zinc-100 bg-white py-24">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl">How it works</h2>
+        <p class="mt-4 text-lg text-zinc-500">Four steps, and none of them touch a file without asking.</p>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="relative">
+          <div class="grad-bg font-display grid h-10 w-10 place-items-center rounded-full text-sm font-bold text-white">1</div>
+          <h3 class="font-display mt-4 text-base font-bold text-zinc-900">Point it at a folder</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">Downloads, a USB drive, anywhere. Cinefold reads every video and subtitle inside — it changes nothing yet.</p>
+        </div>
+        <div class="relative">
+          <div class="grad-bg font-display grid h-10 w-10 place-items-center rounded-full text-sm font-bold text-white">2</div>
+          <h3 class="font-display mt-4 text-base font-bold text-zinc-900">Review what it found</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">Confident matches sit in Ready. Anything unsure waits for you, with a search box to pick the right title yourself.</p>
+        </div>
+        <div class="relative">
+          <div class="grad-bg font-display grid h-10 w-10 place-items-center rounded-full text-sm font-bold text-white">3</div>
+          <h3 class="font-display mt-4 text-base font-bold text-zinc-900">Preview the library</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">Every file's exact destination, side by side. Untick anything. This is the last chance before anything moves.</p>
+        </div>
+        <div class="relative">
+          <div class="grad-bg font-display grid h-10 w-10 place-items-center rounded-full text-sm font-bold text-white">4</div>
+          <h3 class="font-display mt-4 text-base font-bold text-zinc-900">Done — with posters</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-500">Files are filed, subtitles matched, and every folder gets its poster as a Windows icon. Undo is one click away, always.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GET STARTED ============ -->
+  <section id="get-started" class="mx-auto max-w-4xl px-5 py-24 sm:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="font-display text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl">Get started</h2>
+      <p class="mt-4 text-lg text-zinc-500">Three things, and you're organising. All free, no card required.</p>
+    </div>
+
+    <div class="mt-14 space-y-5">
+
+      <div class="flex gap-5 rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg font-display flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">1</div>
+        <div>
+          <h3 class="font-display text-base font-bold text-zinc-900">Download and run Cinefold</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">
+            Grab the installer from
+            <a href="https://github.com/sadew-hiruditha/cinefold/releases" class="font-medium text-brand-600 underline decoration-brand-200 underline-offset-2 hover:text-brand-700">the Releases page</a>
+            and run it. Cinefold is unsigned, so Windows SmartScreen will warn on first launch —
+            that's expected for a small open-source tool; click <strong>More info &rarr; Run anyway</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg font-display flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">2</div>
+        <div>
+          <h3 class="font-display text-base font-bold text-zinc-900">Get a free TMDB key</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">
+            Cinefold uses <a href="https://www.themoviedb.org" class="font-medium text-brand-600 underline decoration-brand-200 underline-offset-2 hover:text-brand-700">TMDB</a>
+            to recognise titles and fetch posters. Sign up (free), then open
+            <a href="https://www.themoviedb.org/settings/api" class="font-medium text-brand-600 underline decoration-brand-200 underline-offset-2 hover:text-brand-700">Settings &rarr; API</a>
+            and request a key — it's issued instantly. Paste it into Cinefold's
+            <strong>Settings &rarr; Library</strong> tab.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 rounded-2xl border border-zinc-100 bg-white p-6">
+        <div class="grad-bg font-display flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">3</div>
+        <div>
+          <h3 class="font-display text-base font-bold text-zinc-900">Pick a library folder</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">
+            Choose an empty folder (or an existing library) as the destination in
+            <strong>Settings &rarr; Library</strong>. Point Cinefold at your messy
+            downloads folder, hit Scan, and preview your new library.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/60 p-6">
+        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold text-zinc-500">+</div>
+        <div>
+          <h3 class="font-display text-base font-bold text-zinc-900">Optional: subtitles on demand</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-zinc-500">
+            Want Cinefold to fetch missing subtitles too? Grab a free key from
+            <a href="https://subdl.com" class="font-medium text-brand-600 underline decoration-brand-200 underline-offset-2 hover:text-brand-700">SubDL</a>
+            (your profile &rarr; API Key) and add it in Settings. Nothing downloads
+            automatically unless you turn that on — otherwise it's a one-click
+            "Get subtitle" whenever you actually want one.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-10 rounded-2xl bg-zinc-900 p-6 text-center sm:p-8">
+      <p class="font-display text-lg font-bold text-white">Building from source instead?</p>
+      <p class="mx-auto mt-2 max-w-md text-sm text-zinc-400">
+        Cinefold is Tauri + Rust + React. Prerequisites, build steps and the full
+        architecture are in the repo README.
+      </p>
+      <a href="https://github.com/sadew-hiruditha/cinefold#readme"
+         class="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100">
+        Read the README
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ SAFETY STRIP ============ -->
+  <section class="border-t border-zinc-100 bg-brand-50/40 py-16">
+    <div class="mx-auto max-w-3xl px-5 text-center sm:px-8">
+      <h2 class="font-display text-2xl font-extrabold text-zinc-900">Built to never surprise you</h2>
+      <ul class="mx-auto mt-6 grid max-w-xl grid-cols-1 gap-3 text-left text-sm text-zinc-600 sm:grid-cols-2">
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>A source file is never deleted until the copy is verified</li>
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>An existing file is never overwritten</li>
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>Preview is the default; moving needs a deliberate click</li>
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>Every run can be undone, completely, any time</li>
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>Nothing leaves your computer — no accounts, no cloud</li>
+        <li class="flex items-start gap-2"><span class="mt-0.5 text-brand-500">✓</span>Open source — read every line yourself</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
+    <h2 class="font-display text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl">
+      Give your library a shelf it deserves.
+    </h2>
+    <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href="https://github.com/sadew-hiruditha/cinefold/releases"
+         class="grad-bg inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand-600/20 transition-transform hover:scale-[1.03]">
+        Download for Windows
+      </a>
+      <a href="https://github.com/sadew-hiruditha/cinefold"
+         class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-7 py-3.5 text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-zinc-100 py-10">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 sm:flex-row sm:px-8">
+      <a href="#top" class="flex items-center gap-2">
+        <img src="assets/logo.png" alt="" class="h-6 w-6" />
+        <span class="font-display text-sm font-bold text-zinc-800">Cinefold</span>
+      </a>
+      <p class="text-xs text-zinc-400">Not affiliated with TMDB or SubDL. Posters &amp; metadata courtesy of TMDB.</p>
+      <a href="https://github.com/sadew-hiruditha/cinefold" class="text-xs font-medium text-zinc-500 hover:text-zinc-800">github.com/sadew-hiruditha/cinefold</a>
+    </div>
+  </footer>
+
+</body>
+</html>
