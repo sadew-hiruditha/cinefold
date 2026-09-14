@@ -28,13 +28,13 @@ const TINT_PRESETS = [
   "#71717a",
 ];
 
-const ICON_STYLES: { id: IconStyle; label: string; hint: string }[] = [
+export const ICON_STYLES: { id: IconStyle; label: string; hint: string }[] = [
   { id: "card", label: "Card", hint: "Poster on a coloured tile" },
   { id: "folder", label: "Folder", hint: "Folder shape with the poster inside" },
   { id: "poster", label: "Poster", hint: "Artwork only, optional frame" },
 ];
 
-function Swatches({
+export function Swatches({
   value,
   onChange,
 }: {
@@ -66,7 +66,7 @@ function Swatches({
 }
 
 /** Live render of the folder icon at three sizes, debounced as sliders move. */
-function IconPreview({
+export function IconPreview({
   draft,
   posterUrl,
 }: {
@@ -153,10 +153,13 @@ export function SettingsView({
   settings,
   samplePosterUrl,
   onSave,
+  initialTab = "icons",
 }: {
   settings: Settings;
   samplePosterUrl: string | null;
   onSave: (settings: Settings) => Promise<void>;
+  /** Which tab to land on. The setup banner sends people to Library. */
+  initialTab?: SettingsTab;
 }) {
   const [draft, setDraft] = useState<Settings>(settings);
   const [keyState, setKeyState] = useState<KeyState>("idle");
@@ -167,8 +170,7 @@ export function SettingsView({
   const [error, setError] = useState<string | null>(null);
   const [reapplying, setReapplying] = useState(false);
   const [reapplyResult, setReapplyResult] = useState<string | null>(null);
-  // Icons first: it is the visual, everyday setting. The rest is setup.
-  const [tab, setTab] = useState<SettingsTab>("icons");
+  const [tab, setTab] = useState<SettingsTab>(initialTab);
 
   useEffect(() => {
     setDraft(settings);

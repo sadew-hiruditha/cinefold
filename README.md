@@ -102,6 +102,9 @@ src-tauri/src/
 - Explorer caches icons aggressively. If a folder still shows the stock icon,
   use **Settings → Refresh icon cache** or sign out and back in.
 - The binary is unsigned, so SmartScreen will warn on first launch.
+- The uninstaller offers a **Delete application data** checkbox. Leave it
+  unticked to keep your settings, API keys, Collection and undo history
+  (`%APPDATA%\com.cinefold.app`). Ticking it removes all of them.
 
 ## Author
 

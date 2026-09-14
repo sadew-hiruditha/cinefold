@@ -19,6 +19,7 @@ import { SourceHero } from "./components/SourceHero";
 import { SettingsView } from "./components/Settings";
 import { UndoHistory } from "./components/UndoHistory";
 import { CollectionView } from "./components/Collection";
+import { Onboarding } from "./components/Onboarding";
 import { Button, EmptyState, Panel, Spinner } from "./components/ui";
 import logoUrl from "./assets/logo.png";
 
@@ -283,6 +284,16 @@ export default function App() {
     { id: "settings", label: "Settings" },
   ];
 
+  // First run: no key or no library yet. The wizard replaces the whole app
+  // until both exist, so a new user is never dropped into a bare screen.
+  if (settings && (needsKey || needsLibrary)) {
+    return (
+      <div className="flex h-full flex-col">
+        <Onboarding settings={settings} onFinish={saveSettings} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex shrink-0 items-center justify-between border-b border-white/5 px-5 py-3">
@@ -310,6 +321,9 @@ export default function App() {
             settings={settings}
             samplePosterUrl={samplePosterUrl}
             onSave={saveSettings}
+            // Until the key and library folder exist, Settings is a setup
+            // screen - open on the tab that actually has them.
+            initialTab={needsKey || needsLibrary ? "library" : "icons"}
           />
         )}
 
