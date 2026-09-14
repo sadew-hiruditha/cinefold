@@ -294,6 +294,8 @@ export const api = {
     invoke<MediaItem>("apply_match", { itemId, candidate }),
   approveItems: (itemIds: string[]) =>
     invoke<MediaItem[]>("approve_items", { itemIds }),
+  fetchItemSubtitle: (itemId: string) =>
+    invoke<MediaItem>("fetch_item_subtitle", { itemId }),
   setItemStatus: (itemId: string, status: ItemStatus) =>
     invoke<MediaItem>("set_item_status", { itemId, status }),
   setItemEpisode: (

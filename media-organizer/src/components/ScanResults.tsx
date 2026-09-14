@@ -6,7 +6,7 @@ import {
   type MediaItem,
   type SkippedFile,
 } from "../lib/api";
-import { Badge, Button, EmptyState, Panel, Spinner } from "./ui";
+import { Badge, Button, EmptyState, Panel, Spinner, SubtitleIcon } from "./ui";
 
 type Tab = "ready" | "review" | "excluded" | "skipped";
 
@@ -41,11 +41,15 @@ function ItemRow({
   onChangeMatch,
   onToggle,
   onApprove,
+  onFetchSubtitle,
+  fetchingSubtitle,
 }: {
   item: MediaItem;
   onChangeMatch: (item: MediaItem) => void;
   onToggle: (item: MediaItem) => void;
   onApprove: (item: MediaItem) => void;
+  onFetchSubtitle: (item: MediaItem) => void;
+  fetchingSubtitle: boolean;
 }) {
   const match = item.identification.best;
   const episode = episodeLabel(item);
@@ -99,7 +103,19 @@ function ItemRow({
                 .join(", ")}` : ""}
             </Badge>
           ) : (
-            <Badge tone="neutral">no subtitles</Badge>
+            <button
+              onClick={() => onFetchSubtitle(item)}
+              disabled={fetchingSubtitle}
+              title="Search SubDL for a subtitle in your preferred language"
+              className="inline-flex shrink-0 items-center gap-1 rounded-md bg-indigo-500/15 px-2 py-0.5 text-[11px] font-medium text-indigo-300 ring-1 ring-inset ring-indigo-400/30 transition-colors hover:bg-indigo-500/25 hover:text-indigo-200 disabled:opacity-50"
+            >
+              {fetchingSubtitle ? (
+                <Spinner className="h-3 w-3" />
+              ) : (
+                <SubtitleIcon className="h-3 w-3" />
+              )}
+              {fetchingSubtitle ? "Fetching subtitle…" : "Get subtitle"}
+            </button>
           )}
           {match && (
             <Badge tone={confidenceTone(item.identification.confidence)}>
@@ -149,6 +165,8 @@ export function ScanResults({
   onApprove,
   onExcludeAll,
   bulkBusy,
+  onFetchSubtitle,
+  fetchingSubtitleId,
 }: {
   items: MediaItem[];
   skipped: SkippedFile[];
@@ -160,6 +178,9 @@ export function ScanResults({
   onApprove: (items: MediaItem[]) => void;
   onExcludeAll: (items: MediaItem[]) => void;
   bulkBusy: boolean;
+  onFetchSubtitle: (item: MediaItem) => void;
+  /** id of the item currently fetching a subtitle, if any. */
+  fetchingSubtitleId: string | null;
 }) {
   const buckets = useMemo(
     () => ({
@@ -279,6 +300,8 @@ export function ScanResults({
               onChangeMatch={onChangeMatch}
               onToggle={onToggle}
               onApprove={(single) => onApprove([single])}
+              onFetchSubtitle={onFetchSubtitle}
+              fetchingSubtitle={fetchingSubtitleId === item.id}
             />
           ))
         )}

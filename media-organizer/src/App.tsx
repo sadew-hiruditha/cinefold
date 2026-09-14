@@ -20,6 +20,7 @@ import { SettingsView } from "./components/Settings";
 import { UndoHistory } from "./components/UndoHistory";
 import { CollectionView } from "./components/Collection";
 import { Button, EmptyState, Panel, Spinner } from "./components/ui";
+import logoUrl from "./assets/logo.png";
 
 type View = "organise" | "collection" | "history" | "settings";
 
@@ -32,15 +33,7 @@ function Logo({ onClick }: { onClick: () => void }) {
       title="Back to Organise"
       className="flex items-center gap-2.5 rounded-lg px-1.5 py-1 -ml-1.5 transition-colors hover:bg-white/5"
     >
-      <div className="grid h-7 w-7 place-items-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-400">
-        <svg viewBox="0 0 20 20" className="h-4 w-4 text-white" fill="none">
-          <path
-            d="M3 6.5A1.5 1.5 0 0 1 4.5 5h3l1.2 1.5h6.8A1.5 1.5 0 0 1 17 8v6.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 3 14.5v-8z"
-            fill="currentColor"
-          />
-          <path d="M9 9.5v4l3.2-2-3.2-2z" fill="#6d6aec" />
-        </svg>
-      </div>
+      <img src={logoUrl} alt="" className="h-7 w-7" />
       <span className="text-sm font-semibold tracking-tight text-white">
         Cinefold
       </span>
@@ -76,6 +69,9 @@ export default function App() {
   const [matchTarget, setMatchTarget] = useState<MediaItem | null>(null);
   const [including, setIncluding] = useState<string | null>(null);
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [fetchingSubtitleId, setFetchingSubtitleId] = useState<string | null>(
+    null,
+  );
 
   const [plan, setPlan] = useState<Plan | null>(null);
   const [executing, setExecuting] = useState(false);
@@ -178,6 +174,17 @@ export default function App() {
       setScanError(String(err));
     } finally {
       setBulkBusy(false);
+    }
+  }
+
+  async function fetchSubtitle(item: MediaItem) {
+    setFetchingSubtitleId(item.id);
+    try {
+      replaceItem(await api.fetchItemSubtitle(item.id));
+    } catch (err) {
+      setScanError(String(err));
+    } finally {
+      setFetchingSubtitleId(null);
     }
   }
 
@@ -390,6 +397,8 @@ export default function App() {
                     onApprove={approveItems}
                     onExcludeAll={excludeAll}
                     bulkBusy={bulkBusy}
+                    onFetchSubtitle={fetchSubtitle}
+                    fetchingSubtitleId={fetchingSubtitleId}
                   />
                 )}
               </>

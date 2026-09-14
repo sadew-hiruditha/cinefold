@@ -100,11 +100,6 @@ pub struct IconOptions {
 }
 
 impl IconOptions {
-    /// Options for a film folder (the default colour).
-    pub fn from_settings(settings: &Settings) -> Self {
-        Self::for_kind(settings, MediaKind::Movie)
-    }
-
     /// Options for a folder of the given kind; series can carry their own
     /// colour so the two shelves tell apart at a glance.
     pub fn for_kind(settings: &Settings, kind: MediaKind) -> Self {

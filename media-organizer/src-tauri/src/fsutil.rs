@@ -335,7 +335,11 @@ pub fn notify_folder_changed(folder: &Path) {
 pub fn notify_folder_changed(_folder: &Path) {}
 
 /// Write a file by way of a temporary sibling and an atomic rename, so no
-/// reader ever sees it half-written. The temp file is hidden while it exists.
+/// reader ever sees it half-written. The temp file is hidden while it exists,
+/// but the finished file is always plain and visible - a same-volume rename
+/// on Windows is metadata-only, so the temp file's Hidden bit would otherwise
+/// ride along onto the destination. Callers that actually want a hidden
+/// result (desktop.ini, folder.ico) set that explicitly afterward.
 pub fn write_atomic(path: &Path, bytes: &[u8]) -> std::io::Result<()> {
     let temp = path.with_extension("tmp");
     fs::write(long_path(&temp), bytes)?;
@@ -345,7 +349,9 @@ pub fn write_atomic(path: &Path, bytes: &[u8]) -> std::io::Result<()> {
     if path.exists() {
         let _ = set_attributes(path, 0x80);
     }
-    fs::rename(long_path(&temp), long_path(path))
+    fs::rename(long_path(&temp), long_path(path))?;
+    let _ = set_attributes(path, 0x80);
+    Ok(())
 }
 
 #[cfg(test)]
@@ -413,6 +419,32 @@ mod tests {
 
         assert_eq!(fs::read(&target).unwrap(), b"second");
         assert!(!dir.join("folder.tmp").exists());
+        // The temp file used to hide the destination while writing; the
+        // finished file must not inherit that on a same-volume rename.
+        assert_eq!(get_attributes(&target).unwrap() & FILE_ATTRIBUTE_HIDDEN, 0);
+
+        fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn write_atomic_never_leaves_a_hidden_result() {
+        // Regression test: a rename on the same volume carries file
+        // attributes across, so hiding the temp file used to leave every
+        // freshly written file (fetched subtitles, posters) invisible in
+        // Explorer unless "show hidden items" was on.
+        let dir = std::env::temp_dir().join(format!(
+            "cinefold-atomic-visible-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir_all(&dir).unwrap();
+        let target = dir.join("Movie (2020).en.srt");
+
+        write_atomic(&target, b"1\n00:00:00,000 --> 00:00:01,000\nHello\n").unwrap();
+
+        assert_eq!(get_attributes(&target).unwrap() & FILE_ATTRIBUTE_HIDDEN, 0);
 
         fs::remove_dir_all(&dir).ok();
     }

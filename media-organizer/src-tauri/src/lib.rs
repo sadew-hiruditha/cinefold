@@ -44,6 +44,7 @@ pub fn run() {
             commands::search_titles,
             commands::apply_match,
             commands::approve_items,
+            commands::fetch_item_subtitle,
             commands::set_item_status,
             commands::set_item_episode,
             commands::build_plan,

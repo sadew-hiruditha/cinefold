@@ -490,6 +490,81 @@ pub async fn approve_items(
     Ok(updated)
 }
 
+/// Fetch a subtitle for one item before it has been organised - written
+/// beside the source file so it travels with the video when the run moves it.
+/// Only searches; never overwrites a subtitle that is already there.
+#[tauri::command]
+pub async fn fetch_item_subtitle(
+    state: State<'_, AppState>,
+    item_id: String,
+) -> Result<MediaItem, String> {
+    let settings = state.settings_snapshot();
+    if !settings.has_subdl_key() {
+        return Err("Add a SubDL API key in Settings first.".to_string());
+    }
+
+    let (source, parsed, tmdb_id) = {
+        let items = state.items.lock().map_err(|_| "state is unavailable")?;
+        let item = items
+            .iter()
+            .find(|i| i.id == item_id)
+            .ok_or_else(|| format!("no item {item_id}"))?;
+        (
+            item.source.clone(),
+            item.parsed.clone(),
+            item.chosen().map(|c| c.id),
+        )
+    };
+    if !source.is_file() {
+        return Err(format!("{} is no longer there", source.display()));
+    }
+
+    let client = state.subdl_client();
+    let outcome = subdl::fetch_for_video(
+        &client,
+        &source,
+        &parsed,
+        tmdb_id,
+        &settings.preferred_languages,
+        |_| {},
+    )
+    .await
+    .map_err(|e| e.to_string())?;
+
+    if outcome.written.is_empty() {
+        let langs = if outcome.missing.is_empty() {
+            "the languages you asked for".to_string()
+        } else {
+            outcome.missing.join(", ")
+        };
+        return Err(format!("No subtitle found in {langs}."));
+    }
+
+    let mut items = state.items.lock().map_err(|_| "state is unavailable")?;
+    let item = items
+        .iter_mut()
+        .find(|i| i.id == item_id)
+        .ok_or_else(|| format!("no item {item_id}"))?;
+
+    for path in &outcome.written {
+        // Written as "<stem>.<lang>.<ext>" - pull the language back out.
+        let language = path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .and_then(|s| s.rsplit_once('.'))
+            .map(|(_, lang)| lang.to_string());
+        item.subtitles.push(subtitles::SubtitleMatch {
+            path: path.clone(),
+            language,
+            forced: false,
+            sdh: false,
+            score: 1.0,
+            reason: "fetched from SubDL".to_string(),
+        });
+    }
+    Ok(item.clone())
+}
+
 #[tauri::command]
 pub fn set_item_status(
     state: State<'_, AppState>,

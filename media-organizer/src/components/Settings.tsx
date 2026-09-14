@@ -464,8 +464,8 @@ export function SettingsView({
           <Toggle
             checked={draft.fetchSubtitles}
             onChange={(value) => update("fetchSubtitles", value)}
-            label="Fetch missing subtitles after organising"
-            hint="Uses the languages below. Needs a SubDL key."
+            label="Auto-fetch subtitles for every title (off by default)"
+            hint="Off means nothing downloads on its own - use Get subtitles on a film or series in your Collection whenever you actually want one."
           />
 
           <Field

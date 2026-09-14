@@ -377,6 +377,29 @@ export function CloseIcon() {
   );
 }
 
+/** A small "CC" subtitle glyph, used on the get-a-subtitle action. */
+export function SubtitleIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" className={className} fill="none" aria-hidden>
+      <rect
+        x="2.5"
+        y="4.5"
+        width="15"
+        height="11"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <path
+        d="M6 8.8c-1.1 0-2 .8-2 2s.9 2 2 2c.6 0 1.1-.2 1.5-.6M13.5 8.8c-1.1 0-2 .8-2 2s.9 2 2 2c.6 0 1.1-.2 1.5-.6"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function FolderIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 20 20" className={className} fill="none" aria-hidden>

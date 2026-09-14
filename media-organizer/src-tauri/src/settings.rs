@@ -71,7 +71,7 @@ impl Default for Settings {
                     .to_string(),
             tmdb_api_key: String::new(),
             subdl_api_key: String::new(),
-            fetch_subtitles: true,
+            fetch_subtitles: false,
             min_file_size_mb: 50,
             video_extensions: ["mkv", "mp4", "avi", "m4v", "mov", "wmv", "mpg", "mpeg", "ts", "webm"]
                 .iter()
